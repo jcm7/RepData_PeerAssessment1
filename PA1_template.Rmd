@@ -94,7 +94,7 @@ activity.data2$dayType = factor(isWeekend, labels=c("weekend",  "weekday"))
 
 ## Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
 
-```{r}
+```{r plot}
 meanPerInterval <- aggregate(activity.data2[, c("steps")], by=list(activity.data2$interval, activity.data2$dayType), "mean")
 names(meanPerInterval) <- c("interval", "dayType", "steps")
 library(lattice)
