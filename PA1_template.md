@@ -1,7 +1,10 @@
 # Reproducible Research: Peer Assessment 1
+## Unziping file
 
+```r
 fname <- unzip('activity.zip', list=TRUE)$Name[1]
 unzip('activity.zip', files=fname, overwrite=TRUE)
+```
 
 ## Loading and preprocessing the data
 
@@ -20,7 +23,7 @@ names(totalPerDay) <- c("date","steps")
 hist(totalPerDay$steps, xlab = "Total steps", main = "Histogram of total steps")
 ```
 
-![](./PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+![](./PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
 
 
 ## Calculate and report the mean and median total number of steps taken per day
@@ -174,7 +177,7 @@ colnames(avgPerInterval) <- c("interval", "mean")
 plot(avgPerInterval, type = "l", xlab = "5-min interval", y="Avg num steps", main = "Avg num steps per 5-min interval")
 ```
 
-![](./PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+![](./PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
 
 
 ## Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
@@ -225,7 +228,7 @@ names(totalPerDay2) <- c("date","steps")
 hist(totalPerDay2$steps, xlab = "Total steps", main = "Histogram of total steps")
 ```
 
-![](./PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
+![](./PA1_template_files/figure-html/unnamed-chunk-10-1.png) 
 
 
 ## Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
@@ -248,4 +251,4 @@ library(lattice)
 xyplot(steps~interval|dayType, meanPerInterval, type="l", xlab = "interval", ylab = "Number of steps", layout=(c(1,2)))
 ```
 
-![](./PA1_template_files/figure-html/unnamed-chunk-11-1.png) 
+![](./PA1_template_files/figure-html/plot-1.png) 

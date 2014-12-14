@@ -55,7 +55,11 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 </div>
 
 
-<p>fname &lt;- unzip(‘activity.zip’, list=TRUE)$Name[1] unzip(‘activity.zip’, files=fname, overwrite=TRUE)</p>
+<div id="unziping-file" class="section level2">
+<h2>Unziping file</h2>
+<pre class="r"><code>fname &lt;- unzip('activity.zip', list=TRUE)$Name[1]
+unzip('activity.zip', files=fname, overwrite=TRUE)</code></pre>
+</div>
 <div id="loading-and-preprocessing-the-data" class="section level2">
 <h2>Loading and preprocessing the data</h2>
 <pre class="r"><code>activity.data &lt;- read.csv(file = &quot;activity.csv&quot;)</code></pre>
