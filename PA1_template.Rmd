@@ -4,22 +4,99 @@ output:
   html_document:
     keep_md: true
 ---
-
+## Unziping file
+```{r}
+fname <- unzip('activity.zip', list=TRUE)$Name[1]
+unzip('activity.zip', files=fname, overwrite=TRUE)
+```
 
 ## Loading and preprocessing the data
 
+```{r}
+activity.data <- read.csv(file = "activity.csv")
+```
 
 
-## What is mean total number of steps taken per day?
+## Make a histogram of the total number of steps taken each day
+
+```{r}
+totalPerDay <- aggregate(activity.data[, c("steps")], by=list(activity.data$date), "sum")
+names(totalPerDay) <- c("date","steps")
+hist(totalPerDay$steps, xlab = "Total steps", main = "Histogram of total steps")
+```
 
 
+## Calculate and report the mean and median total number of steps taken per day
 
-## What is the average daily activity pattern?
+```{r}
+aggregate(activity.data[, c("steps")], by=list(activity.data$date), "mean")
+aggregate(activity.data[, c("steps")], by=list(activity.data$date), "median")
+```
 
 
+## Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
-## Imputing missing values
+```{r}
+avgPerInterval <- aggregate(activity.data[, c("steps")], by=list(activity.data$interval), "mean", na.rm=TRUE, na.action= NULL)
+colnames(avgPerInterval) <- c("interval", "mean")
+plot(avgPerInterval, type = "l", xlab = "5-min interval", y="Avg num steps", main = "Avg num steps per 5-min interval")
+```
 
 
+## Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
-## Are there differences in activity patterns between weekdays and weekends?
+```{r}
+maxMeanPerInterval <- max(avgPerInterval$mean)
+avgPerInterval[avgPerInterval$mean == maxMeanPerInterval,]$interval
+```
+
+
+## Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+
+```{r}
+totalNAs <- nrow(activity.data[is.na(activity.data$steps),])
+```
+
+
+## Devise a strategy for filling in all of the missing values in the dataset. 
+
+```{r}
+replaceNAWithMean <- function(x) replace(x, is.na(x), mean(x, na.rm = TRUE))
+```
+
+
+## Create a new dataset that is equal to the original dataset but with the missing data filled in.
+
+```{r}
+library(plyr)
+activity.data2 <- ddply(activity.data, ~ interval, transform, steps = replaceNAWithMean(steps))
+activity.data2 <- activity.data2[order(activity.data2$date, activity.data2$interval), ]
+```
+
+
+## Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+
+```{r}
+totalPerDay2 <- aggregate(activity.data2[, c("steps")], by=list(activity.data2$date), "sum")
+names(totalPerDay2) <- c("date","steps")
+hist(totalPerDay2$steps, xlab = "Total steps", main = "Histogram of total steps")
+```
+
+
+## Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
+
+```{r}
+activity.data2$date <- as.Date(activity.data2$date)
+isWeekend <- (weekdays(activity.data2$date) == 'Sunday' | weekdays(activity.data2$date) == 'Saturday')
+activity.data2$dayType = factor(isWeekend, labels=c("weekend",  "weekday"))
+```
+
+
+## Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
+
+```{r}
+meanPerInterval <- aggregate(activity.data2[, c("steps")], by=list(activity.data2$interval, activity.data2$dayType), "mean")
+names(meanPerInterval) <- c("interval", "dayType", "steps")
+library(lattice)
+xyplot(steps~interval|dayType, meanPerInterval, type="l", xlab = "interval", ylab = "Number of steps", layout=(c(1,2)))
+```
