@@ -4,7 +4,7 @@ output:
   html_document:
     keep_md: true
 ---
-## Unziping file
+## Unziping the activity.zip file
 ```{r}
 fname <- unzip('activity.zip', list=TRUE)$Name[1]
 unzip('activity.zip', files=fname, overwrite=TRUE)

@@ -1,5 +1,5 @@
 # Reproducible Research: Peer Assessment 1
-## Unziping file
+## Unziping the activity.zip file
 
 ```r
 fname <- unzip('activity.zip', list=TRUE)$Name[1]
